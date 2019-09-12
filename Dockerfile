@@ -22,12 +22,14 @@ RUN unzip v0.13.0.zip
 RUN cd jsonnet-0.13.0 && \
     make -j && \
     mv jsonnet /usr/local/bin && \
+    mv jsonnetfmt /usr/local/bin && \
     rm -rf /opt/jsonnet-0.13.0 && ls /usr/local/bin/jsonnet
 
 
 # create our container with both
 FROM alpine:latest
 
-RUN apk add --no-cache libstdc++ 
+RUN apk add --no-cache libstdc++
 COPY --from=c_builder /usr/local/bin/jsonnet /bin/c-jsonnet
-COPY --from=go_builder  /go/src/github.com/google/go-jsonnet/cmd/jsonnet/jsonnet /bin/go-jsonnet
+COPY --from=c_builder /usr/local/bin/jsonnetfmt /bin/jsonnetfmt
+COPY --from=go_builder  /go/src/github.com/google/go-jsonnet/cmd/jsonnet/jsonnet /bin/jsonnet
