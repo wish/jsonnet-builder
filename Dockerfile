@@ -29,7 +29,7 @@ RUN cd jsonnet-0.14.0 && \
 # create our container with both
 FROM alpine:latest
 
-RUN apk add --no-cache libstdc++
+RUN apk add --no-cache libstdc++ jq
 COPY --from=c_builder /usr/local/bin/jsonnet /bin/c-jsonnet
 COPY --from=c_builder /usr/local/bin/jsonnetfmt /bin/jsonnetfmt
 COPY --from=go_builder  /go/src/github.com/google/go-jsonnet/cmd/jsonnet/jsonnet /bin/jsonnet
