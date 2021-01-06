@@ -26,10 +26,21 @@ RUN cd jsonnet-0.15.0 && \
     rm -rf /opt/jsonnet-0.15.0 && ls /usr/local/bin/jsonnet
 
 
-# create our container with both
+FROM rust:alpine as rust_builder
+RUN apk add --no-cache musl-dev
+
+RUN wget https://github.com/CertainLach/jrsonnet/archive/0.3.3.zip
+RUN unzip 0.3.3.zip
+RUN cd jrsonnet-0.3.3/cmds/jrsonnet && \
+    cargo build --release && \
+    mv ../../target/release/jrsonnet /usr/local/bin && \
+    ls /usr/local/bin/jrsonnet
+
+# create our container with all three
 FROM alpine:latest
 
 RUN apk add --no-cache libstdc++ jq
 COPY --from=c_builder /usr/local/bin/jsonnet /bin/c-jsonnet
 COPY --from=c_builder /usr/local/bin/jsonnetfmt /bin/jsonnetfmt
 COPY --from=go_builder  /go/src/github.com/google/go-jsonnet/cmd/jsonnet/jsonnet /bin/jsonnet
+COPY --from=rust_builder  /usr/local/bin/jrsonnet /bin/jrsonnet
