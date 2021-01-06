@@ -29,10 +29,9 @@ RUN cd jsonnet-0.15.0 && \
 FROM rust:alpine as rust_builder
 RUN apk add --no-cache musl-dev
 
-# Regression in 0.3.2
-RUN wget https://github.com/CertainLach/jrsonnet/archive/0.3.1.zip
-RUN unzip 0.3.1.zip
-RUN cd jrsonnet-0.3.1/cmds/jrsonnet && \
+RUN wget https://github.com/CertainLach/jrsonnet/archive/0.3.3.zip
+RUN unzip 0.3.3.zip
+RUN cd jrsonnet-0.3.3/cmds/jrsonnet && \
     cargo build --release && \
     mv ../../target/release/jrsonnet /usr/local/bin && \
     ls /usr/local/bin/jrsonnet
