@@ -27,11 +27,10 @@ RUN cd jsonnet-0.15.0 && \
 
 
 FROM rust:alpine as rust_builder
-RUN apk add --no-cache musl-dev
-
-RUN wget https://github.com/CertainLach/jrsonnet/archive/0.3.3.zip
-RUN unzip 0.3.3.zip
-RUN cd jrsonnet-0.3.3/cmds/jrsonnet && \
+RUN apk add --no-cache musl-dev git
+RUN git clone https://github.com/CertainLach/jrsonnet
+RUN cd jrsonnet && git checkout 847c11f5901f4c67125101caabc2c34d1d31bf91
+RUN cd jrsonnet/cmds/jrsonnet && \
     cargo build --release && \
     mv ../../target/release/jrsonnet /usr/local/bin && \
     ls /usr/local/bin/jrsonnet
